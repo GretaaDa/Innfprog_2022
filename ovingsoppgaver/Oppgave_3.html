@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="average"></p>
+
+    <script>
+      // Setting the families age to seperate variables
+      const dad_age = 37;
+      const mom_age = 32;
+      const daughter_age = 7;
+      const son_age = 2;
+
+      // Making the code to calculate the average age by adding all of the above variables and deviding by the amount of people
+      const average = (dad_age + mom_age + daughter_age + son_age) / 4;
+
+      // Runing the code on a webpage
+      document.getElementById("average").innerHTML = average;
+    </script>
+  </body>
+</html>
