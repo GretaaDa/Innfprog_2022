@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="print"></p>
+    <script>
+      //Creating 3 variables for genders
+      const child1 = "boy";
+      const child2 = "girl";
+      const child3 = "girl";
+
+      //We make an empty varaible called print
+      let print = "";
+
+      //Creating 2 more varaibles for the number of kids
+      let num_boys = 0;
+      let num_girls = 0;
+
+      //Making a if test. If the varaible child1 is a boy then add 1 to num_boy
+      //If the varaible is not a boy, then add 1 to num_girl
+      if (child1 === "boy") {
+        num_boys += 1;
+      } else {
+        num_girls += 1;
+      }
+
+      //Using the same concept as in child 1 for the second if-test, but changing it to child2
+      if (child2 === "boy") {
+        num_boys += 1;
+      } else {
+        num_girls += 1;
+      }
+
+      //Repeating the same process with child3
+      if (child3 === "boy") {
+        num_boys += 1;
+      } else {
+        num_girls += 1;
+      }
+
+      //Now declaring a variable that calculates the total amount of boys and girls
+      print =
+        "Total amount of boys: " +
+        num_boys +
+        ", Total amount of girls: " +
+        num_girls;
+
+      //To let the browser print the contents of print to HTML - elemet, we use the is "print"
+      document.getElementById("print").innerHTML = print;
+    </script>
+  </body>
+</html>

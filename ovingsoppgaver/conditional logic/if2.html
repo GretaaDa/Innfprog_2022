@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="age"></p>
+    <!-- Making an id tag named age to allow the website to print out the javascript-->
+    <script>
+      //Setting a variable myAge with the value 20
+      const myAge = 20;
+
+      //Declaring a variable age that will be used to store the text we want to print out
+      let age;
+
+      //We make a if-ifelse-test.
+      //First condition is less then 18, we add a text "you are not legal age"
+      //The second condition is that you are 18 or more and 62 or less and the text says "legal and ready to start working or studies"
+      //Third condition is above 62 and text says "ready to retire!"
+      if (age < myAge) {
+        age = "You are not legal age";
+      } else if ((age) => 18 && age <= 62) {
+        age = "You are legal and ready to start work or studies";
+      } else {
+        age = "You are ready to retire!";
+      }
+
+      // Now we can print the contents of the variable age to the HTML - elemet with the id "age"
+      document.getElementById("age").innerHTML = age;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="print"></p>
+    <!--Add an id tag print to allow the website to print out the javascript-->
+    <script>
+      //Making a variable for my name
+      const myName = "Greta";
+
+      //Declaring a variable print with no value, that can contain the text we will print
+      let print;
+
+      //Creating an if-test. If the variable myName contains the text string "Greta", it is correct
+      //Then I can run it as that is my name
+      //But if the variable myName does not include "Greta", the it should say "My name is not Name Dauskurtaite"
+      if (myName === "Greta") {
+        print = "My name is " + myName + " Dauskurtaite";
+      } else {
+        print = "My name is not " + myName + " Dauskurtaite";
+      }
+
+      //Now that the test is done we can print out what is saved in the variable print to an HTML - element with the id print
+      document.getElementById("print").innerHTML = print;
+    </script>
+  </body>
+</html>

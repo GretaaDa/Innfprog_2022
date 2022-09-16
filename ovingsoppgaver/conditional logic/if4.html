@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="print"></p>
+    <script>
+      //Creating two variables for the grades
+      const ITF19019_grade = "A";
+      const ITF10511_grade = "F";
+
+      //DEklaring a variable that shows if the cours is passed
+      //The boolean value is stored in the variable and is determened by a condition written with a ternary operator
+      const ITF19019_passed = ITF19019_grade === "F" ? true : false;
+      const ITF10511_passed = ITF10511_grade === "F" ? true : false;
+
+      // creating a variable for the amout passed
+      let countPassed = 0;
+
+      //Making an if-test to test if ITF19019_grade is true and the countPassed should increase by 1
+      if (ITF19019_passed === true) {
+        countPassed += 1;
+      }
+
+      // doing the same with ITF10511_grade
+      if (ITF10511_passed === true) {
+        countPassed += 1;
+      }
+
+      //Making a variable that prints out the context, with a templete literal
+      const textPrint = `You have passes ${countPassed} of 2 courses`;
+
+      //Print the contents of textPrint to HTML-elemet using the id "print"
+      document.getElementById("print").innerHTML = textPrint;
+    </script>
+  </body>
+</html>
