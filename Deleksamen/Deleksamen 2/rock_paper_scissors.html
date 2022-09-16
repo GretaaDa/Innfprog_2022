@@ -251,7 +251,9 @@
         // That means we can create a function that does this for us. So it is done below this function.
         // Now, let's use it to get a random number from 0 (first index of an array) to array.length - 1
         // (maximum index of an array is its length minus 1)
-        const randomIndex = getRandomInt(signs.length - 1);
+
+        // Not sure it was the intention, but the random number generator only generated 2 outcomes
+        const randomIndex = getRandomInt(signs.length);
         //Now we can call the random computer selected sign from the signs-array:
         const computerSign = signs[randomIndex];
         //Lets write the computer selection to the console to make sure we have a valid hit:
