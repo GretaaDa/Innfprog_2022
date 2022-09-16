@@ -121,6 +121,10 @@
         display: flex;
         justify-content: space-between;
       }
+      #resultBox {
+        display: flex;
+        flex-direction: column;
+      }
       #replay {
         background: var(--green);
         color: #fff;
@@ -136,7 +140,7 @@
     <section id="gamearea">
       <div id="playerSigns">
         <h2 id="instruction">Play your hand:<span id="choice"></span></h2>
-        <!-- Task 1: Error 4. "playy" can not be identified in the script, use "play" instead-->
+        <!-- Task 1: Error 4. "playy" this function can not be identified in the script, use a predefined function "play"-->
         <button
           type="button"
           onClick="play('rock')"
@@ -176,13 +180,24 @@
         <!-- A hidden button to show after a game, that resets and let the player play again -->
         <button id="replay" onClick="restartGame()">Play again</button>
       </div>
+      <!--Task 6: -->
+      <div id="resultBox">
+        <div>Computer wins: <span id="computerWins">0</span></div>
+        <div>Player wins: <span id="playerWins">0</span></div>
+        <div>Draws: <span id="draws">0</span></div>
+        <button id="replay" onClick="restartGame()">Play again</button>
+      </div>
     </section>
 
     <script>
       //We'll prepare an empty variable that later will contain the winner
       let winner = "";
-      //And prepare a counter-variable for number of games played:
+      // And prepare a counter-variable for number of games played
+      // Task 6: prepared 3 new veriables for the number of games won, lost and draws
       let counter = 0;
+      let playerWins = 0;
+      let computerWins = 0;
+      let draws = 0;
       //Make available signs available in code as an array
       const signs = ["rock", "paper", "scissors"];
 
@@ -194,12 +209,13 @@
        * On mouseout, remove the text and class
        */
       /*
-       * Task 1: Error 2. the variable "buttonss" is not definde, use "buttons" instead
+       * Task 1: Error 2. the variable "buttonss" is not definde in the script, use a pre defined variable, such as "buttons"
+       * Error 5: The chioldNodes idex was set to 0, which indicates that the first
        */
       buttons.forEach((button) => {
         button.addEventListener("mouseover", (event) => {
           document.getElementById("choice").innerHTML =
-            button.childNodes[0].alt;
+            button.childNodes[1].alt;
           document
             .getElementById("choice")
             .setAttribute("class", "choiceAnimate");
@@ -248,7 +264,9 @@
 
         computer.style.display = "block";
         /* OPPGAVE 2.1: FORKLAR HVA SOM SKJER PÅ LINJE 208
-         * _This function allows the value of "computerSing" display in a block type on the website instead of only the console_
+         * _The computer element in the style section was displayed as none. The line above allows the properties of the
+         * element to return to display in a block type. In other words, it makes the choice of the computer reaper in the center of the line,
+         * after the player makes a choice in the game. _
          */
 
         computer.innerHTML = "Computer selects " + computerSign;
@@ -287,23 +305,57 @@
             winner = "player";
           }
         }
+
+        /* Task 5: Creating a condition statement
+         * Since the variable winner is already created, we can use it together with the if-test, that checks the rules.
+         * To make the new conditional statement, we need to set the first condition (if),
+         * to winner equals computer with the text "You lost" in the winner variable.
+         * The second condition should be winner equals player with text "You win" in the variable winner.
+         * For all other conditions (else), we use the text "It's a tie" in the winner variable
+         */
+        /*
+         * Task 6: Added the win and draw veriables in the if-test with an updated value and then printed
+         * these variables into the HTML-element with their designated ids
+         */
+        if (winner === "computer") {
+          computerWins += 1;
+          document.getElementById("computerWins").innerHTML = computerWins;
+          winner = "You lost";
+        } else if (winner === "player") {
+          playerWins += 1;
+          document.getElementById("playerWins").innerHTML = playerWins;
+          winner = "You win";
+        } else {
+          draws += 1;
+          document.getElementById("draws").innerHTML = draws;
+          winner = "It's a tie";
+        }
+
         //Now we have checks to set the winner. Let's write it to the website.
         //Now you know the drill: show #winner by display: block and fill it with HTML:
         const winnerDiv = document.getElementById("winner");
         winnerDiv.style.display = "block";
 
-        winnerDiv.innerHTML = "The winner is " + winner;
+        // Task 5: Now we need to fix the line belove, by removing the text "The winner is", since everything we need is stored in the winner veriable
+        winnerDiv.innerHTML = winner;
         /* OPPGAVE 2.2: FORKLAR HVA SOM SKJER PÅ LINJE 254
-         * _ditt svar her_
+         * _The line above is used to allow Javascript manipulate the HTML element and set the value in the game.
+         * The line displays the string the same, but allows the winner to keep changing between computer, player and undecided, depending on the condition_
          */
+
+        // Task 3: Changing the background color, of the <div> with the id winner, to gold using Javascript
+        winnerDiv.style.background = "#FFD700";
 
         //Now, lastly, let's update the counter on how many games we have played:
         counter = counter + 1;
 
         document.getElementById("counter").innerHTML = counter;
         /* OPPGAVE 2.3: FORKLAR HVA SOM SKJER PÅ LINJE 262
-         * _ditt svar her_
+         * _This line _
          */
+
+        // Task 4: Updating the color of the counter to red(#be5944), after a game has been played
+        document.getElementById("counter").style.color = "#be5944";
 
         //And display the button for playing again:
         document.getElementById("replay").style.display = "block";
@@ -327,7 +379,7 @@
       }
 
       /*
-       *Task 1: Error 1. The system can not identify keyword "unction", replaced it with a valid one "function"
+       *Task 1: Error 1. The system can not identify keyword "unction", replaced it with a valid one, like "function"
        */
       //Function for random numnber, fetched from MDN web docs:
       function getRandomInt(max) {
