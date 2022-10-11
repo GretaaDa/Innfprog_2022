@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catch the aliens</title>
+    <link href="catchaliens.css" rel="stylesheet" media="all" />
+  </head>
+  <body>
+    <header>
+      <p>
+        Time left: <span id="time">60</span> Aliens caught:
+        <span id="points">0</span>
+      </p>
+    </header>
+    <section>
+      <canvas id="gamearea"></canvas>
+    </section>
+    <!-- Used the following to find out the texts width with the help of console:
+        <div
+      style="font-size: 60px; font-family: 'space mono'; padding: 0; margin: 0"
+    >
+      GAME OVER!
+    </div>-->
+    <!--Task 4.
+      2. Start button-->
+    <div>
+      <button type="button" id="startButton" onclick="playGame">Start</button>
+    </div>
+    <p>
+      <a href="https://www.flaticon.com/free-icons/alien" title="alien icons"
+        >Alien icon created by Smashicons</a
+      >,
+      <a
+        href="https://www.flaticon.com/free-icons/spaceship"
+        title="spaceship icons"
+        >Spaceship icons created by Freepik</a
+      >
+      - Flaticon
+    </p>
+    <aside id="history">
+      <h2>Stats</h2>
+      <ol id="points"></ol>
+    </aside>
+    <script>
+      /*Task 1.
+        Error 5. The function .getElementBYId does not exsist, we need to use a predefined function such as .getElementById
+        Task 3
+        1. Sett the font to space mono, size 60px and style to red.
+        Then set the texts basline as middle, this allows the system to identify the texts basline as the middle of it. https://www.geeksforgeeks.org/html-canvas-textbaseline-property/
+        2. Changed the width and height of canvas*/
+      //Sett opp Canvas:
+      const canvas = document.getElementById("gamearea");
+      canvas.width = 960; //64px ikoner * 11 ruter
+      canvas.height = 640; //64px ikoner * 8 ruter
+      const ctx = canvas.getContext("2d");
+      ctx.font = "60px space mono";
+      ctx.fillStyle = "red";
+      ctx.textBaseline = "middle";
+
+      /* Task 3
+      2. To make the counter to go down from 60, set a new value of the variable countdown.*/
+      //Gjør klar spillinformasjon
+      let countdown = 60;
+      let iconsize = 64;
+      let gameOver = false;
+      const player = { speed: 2 };
+      const enemy = {};
+      let aliensCaught = 0;
+      let history = [];
+      history.length < 1
+        ? (document.getElementById("history").style.display = "none")
+        : (document.getElementById("history").style.display = "block");
+
+      //Gjør klar bakgrunnsbilde for spiller
+      let playerLoaded = false;
+      const playerImage = new Image();
+      playerImage.onload = () => {
+        playerLoaded = false;
+      };
+      playerImage.src = "img/spaceship.png";
+
+      //Gjør klar bakgrunnsbilde for alien
+      let enemyLoaded = false;
+      const enemyImage = new Image();
+      enemyImage.onload = () => {
+        enemyLoaded = false;
+      };
+      enemyImage.src = "img/alien.png";
+
+      //Lag en funksjon som kjører i gang spillelementene
+      //Plasser spilleren i midten av brettet, og fienden et vilkårlig sted innenfor spillbrettet
+      function drawCharacters() {
+        player.x = canvas.width / 2;
+        player.y = canvas.height / 2;
+        enemy.x = iconsize / 2 + Math.random() * (canvas.width - iconsize);
+        enemy.y = iconsize / 2 + Math.random() * (canvas.height - iconsize);
+      }
+      /**************************************************************
+       OPPGAVE 2 - KOMMENTAR 1
+       Forklar hva de fire linjene i funksjonen drawCharacters() gjør
+       - player.x = canvas.width / 2; This line takes the value of the canvas width (704), divids it by two and defines the new number as the value of x in the players variable.
+       player.y = canvas.height / 2; Takes the hight of the canvas (512), divids it by two and defines the number as the value of y in the players variable.
+       enemy.x = iconsize / 2 + Math.random() * (canvas.width - iconsize);
+       enemy.y = iconsize / 2 + Math.random() * (canvas.height - iconsize);-
+      ***************************************************************/
+
+      //Sjekk om spilleren har trykket ned (og holder) en tast:
+      document.addEventListener("keydown", buttonPressed);
+      document.addEventListener("keyup", buttonReleased);
+      //Gjør klar variabler for å bestemme hvilken retning som er aktiv:
+      let left = false;
+      let right = false;
+      let up = false;
+      let down = false;
+
+      /*Task 1.
+      Error 1. The system can not identify the beggining of the function block, due to the lack of curly brackets. To fix this error we need to define where the block beggins,
+      by addidng {, so the system knows where it should start executing code.
+      Error 2. The system can not run the contents in the function block properly, due to an unidentified punctuation mark in line (..),
+      simply fix the error by removing the full stop mark */
+      //Set retningsvariabel til true hvis riktig piltast er trykket:
+      function buttonPressed(event) {
+        if (event.key === "ArrowLeft") {
+          left = true;
+        }
+        if (event.key === "ArrowRight") {
+          right = true;
+        }
+        if (event.key === "ArrowUp") {
+          up = true;
+        }
+        if (event.key === "ArrowDown") {
+          down = true;
+        }
+      }
+      //Sett retningsvariabel til false hvis piltasten blir sluppet opp:
+      function buttonReleased(event) {
+        if (event.key === "ArrowLeft") {
+          left = false;
+        }
+        if (event.key === "ArrowRight") {
+          right = false;
+        }
+        if (event.key === "ArrowUp") {
+          up = false;
+        }
+        if (event.key === "ArrowDown") {
+          down = false;
+        }
+      }
+      /**************************************************************
+       OPPGAVE 2 - KOMMENTAR 2
+       Forklar hvorfor vi trenger å sjekke både når en knapp er trykket ned,
+       og når den er sluppet opp igjen.
+       - We need both of the functions (buttonPressed and buttonReleased) to help the system identify change in when a button is pressed and when it gets
+       released. The function buttonPressed allows the system to manipulate the player's character's direction accordigly to which ever button is held dowm.
+       The function buttonReleased allows the character to stop it's previous action when a button is released. Withought the second function, the character would
+       continue moving the same direction, even when no button is held down. -
+      ***************************************************************/
+
+      /* Task 1.
+      Error 3. The logical and operator ?? is not appropriate to use for line (..). This opperator is more used to combine two or more statements.
+      Since The line (..) uses other comparison operators, for the statement to work we need to use the ternary operator ? after the condition left*/
+      //Funksjon som modifiserer spillerens posisjon på spillbrettet:
+      function playerMovement(speedModifier) {
+        //Flytt player i riktig retning
+        left ? (player.x -= player.speed * speedModifier) : null;
+        right ? (player.x += player.speed * speedModifier) : null;
+        up ? (player.y -= player.speed * speedModifier) : null;
+        down ? (player.y += player.speed * speedModifier) : null;
+
+        //Sjekk om player treffer fienden
+        if (
+          player.x <= enemy.x + iconsize / 2 &&
+          player.y <= enemy.y + iconsize / 2 &&
+          enemy.x <= player.x + iconsize / 2 &&
+          enemy.y <= player.y + iconsize / 2
+        ) {
+          aliensCaught++;
+          drawCharacters();
+        }
+      }
+
+      //Lag funksjon for nedtelling
+      function countdownFunction() {
+        countdown--;
+        if (countdown <= 0) {
+          clearInterval(countdownFunction);
+          gameOver = true;
+          countdown = 0;
+          playerLoaded = false;
+          enemyLoaded = false;
+        }
+      }
+      /**************************************************************
+       OPPGAVE 2 - KOMMENTAR 3
+       Forklar hva linjene i funksjonen countDownFunction() gjør
+       - countdown--; when a decrement operator is added after a variable it subracts 1 from the variables value, this allows our counter to count down from 10 (60 when task 3 is done)
+        if (countdown <= 0) { this line specifies the condition that should be met for the system to execute the block of code under it.
+         When the countdown is equal or bellow zero it should execute the following:
+          clearInterval(countdownFunction); stops the coundown function
+          gameOver = true; allows game over to apear on the screen
+          countdown = 0; displayes the countdown's value as 0 (meaning it no longer is counting down)
+          playerLoaded = false; enemyLoaded = false; hides the player's and enemy's characters-
+      ***************************************************************/
+
+      //Kjør funksjonen for nedtelling hver sekund (1000. milisekund)
+      setInterval(countdownFunction, 1000);
+
+      /* Task 3.
+      1. To center the text "GAME OVER!" we can devide the canvas width in half and subract half of the text width, by doing so we allow the text to start at a point that
+      is half of the text width from the canvas x center point. This allows the text to fully exted and have simular empty spaces from the game areas edges. To center
+      the hight of the text, we can devide the canvas height by two and use the function textBaseline.*/
+      //Funksjon som tegner/fyller ut alle spill-elementene i canvas:
+      function drawGameElements() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        playerLoaded ? ctx.drawImage(playerImage, player.x, player.y) : null;
+        enemyLoaded ? ctx.drawImage(enemyImage, enemy.x, enemy.y) : null;
+        gameOver
+          ? ctx.fillText(
+              "GAME OVER!",
+              canvas.width / 2 - 168.4,
+              canvas.height / 2
+            )
+          : null;
+        document.getElementById("points").innerHTML = aliensCaught;
+      }
+
+      /*Task 1.
+      Error 4. The system can not identify the keyword functio, it must be replaced with an existing keyword such as function*/
+      //Funksjon som kjører spillet
+      function renderGame() {
+        playerMovement(1);
+        drawGameElements();
+        requestAnimationFrame(renderGame);
+      }
+
+      // Cross-browser support for requestAnimationFrame (https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
+      requestAnimationFrame =
+        window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        window.mozRequestAnimationFrame;
+
+      /* Task 3
+        2. Changed the value of the variable countdow to 60*/
+      //Funksjon for start/restart spill
+      function playGame() {
+        document.getElementById("time").innerHTML = countdown;
+        //Startverdier
+        let countdown = 60;
+        let gameOver = false;
+        playerLoaded = false;
+        enemyLoaded = false;
+        //Tegne spill-elementer ved oppstart
+        drawCharacters();
+        renderGame();
+      }
+
+      //Kjør hele spillet med playGame-funksjonen
+      playGame();
+    </script>
+  </body>
+</html>
