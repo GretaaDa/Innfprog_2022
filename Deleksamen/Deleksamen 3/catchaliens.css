@@ -37,17 +37,18 @@ header span {
 }
 
 section {
-  width: 960px; /* 32px * 22ruter */
-  height: 640px; /* 32px * 16 ruter */
+  width: 960px;
+  height: 640px;
 }
 
 button {
-  background: rgba(208, 228, 96, 0.856);
-  font-family: "Space Mono", monospace;
-  font-size: 20px;
+  font-family: "Space Mono";
+  background: rgb(251, 255, 0);
+  font-size: 30px;
   width: 150px;
-  height: 50px;
-  border-radius: 15%;
+  height: 80px;
+  border-radius: 25%;
+  font-weight: bold;
 }
 
 aside {

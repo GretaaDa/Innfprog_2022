@@ -17,16 +17,14 @@
     <section>
       <canvas id="gamearea"></canvas>
     </section>
-    <!-- Used the following to find out the texts width with the help of console:
+    <!-- Used the following to find out the texts width (367.2) with the help of console:
         <div
       style="font-size: 60px; font-family: 'space mono'; padding: 0; margin: 0"
-    >
-      GAME OVER!
-    </div>-->
-    <!--Task 4.
-      2. Start button-->
+    >GAME OVER!</div>-->
+    <!-- Task 4 
+      2) Created a button with the id "startButton" under section, so the button would apear under the game area. Changed the look of it in css.-->
     <div>
-      <button type="button" id="startButton" onclick="playGame">Start</button>
+      <button type="button" id="startButton">Start</button>
     </div>
     <p>
       <a href="https://www.flaticon.com/free-icons/alien" title="alien icons"
@@ -44,12 +42,13 @@
       <ol id="points"></ol>
     </aside>
     <script>
-      /*Task 1.
-        Error 5. The function .getElementBYId does not exsist, we need to use a predefined function such as .getElementById
-        Task 3
-        1. Sett the font to space mono, size 60px and style to red.
-        Then set the texts basline as middle, this allows the system to identify the texts basline as the middle of it. https://www.geeksforgeeks.org/html-canvas-textbaseline-property/
-        2. Changed the width and height of canvas*/
+      /* Task 1.
+        Error 5) The function .getElementBYId does not exsist, we need to use a predefined function such as .getElementById
+         Task 3.
+        1) Sett the font to "space mono", size to 60px and style to red.
+        We need to define the basline of the text as the middle, so the whole text can be centered on the y axis center point. Used for help:
+        https://www.geeksforgeeks.org/html-canvas-textbaseline-property/
+        3) To resize the game board we need to change the size of the canvas. And then in css make the section width and hight match.*/
       //Sett opp Canvas:
       const canvas = document.getElementById("gamearea");
       canvas.width = 960; //64px ikoner * 11 ruter
@@ -59,13 +58,16 @@
       ctx.fillStyle = "red";
       ctx.textBaseline = "middle";
 
-      /* Task 3
-      2. To make the counter to go down from 60, set a new value of the variable countdown.*/
+      /* Task 1.
+        Error 6) Alien count should start from 0.
+      Task 3.
+        2) Made the countdown variable empty, so later in the code it can be manipulated. (same with gameover for task 4)
+        4) Since, the game area has increased the speed of the spaship seems too slow now. I am going to increase the player speed to 2.5, so it is not to fast or to slow*/
       //Gjør klar spillinformasjon
-      let countdown = 60;
+      let countdown = "";
       let iconsize = 64;
-      let gameOver = false;
-      const player = { speed: 2 };
+      let gameOver = "";
+      const player = { speed: 2.5 };
       const enemy = {};
       let aliensCaught = 0;
       let history = [];
@@ -73,11 +75,15 @@
         ? (document.getElementById("history").style.display = "none")
         : (document.getElementById("history").style.display = "block");
 
+      /* Task 4.
+        2) Declared a startButton veriable, that gets the element button by its id*/
+      const startButton = document.getElementById("startButton");
+
       //Gjør klar bakgrunnsbilde for spiller
       let playerLoaded = false;
       const playerImage = new Image();
       playerImage.onload = () => {
-        playerLoaded = false;
+        playerLoaded = true;
       };
       playerImage.src = "img/spaceship.png";
 
@@ -85,7 +91,7 @@
       let enemyLoaded = false;
       const enemyImage = new Image();
       enemyImage.onload = () => {
-        enemyLoaded = false;
+        enemyLoaded = true;
       };
       enemyImage.src = "img/alien.png";
 
@@ -102,9 +108,11 @@
        Forklar hva de fire linjene i funksjonen drawCharacters() gjør
        - player.x = canvas.width / 2; This line takes the value of the canvas width (704), divids it by two and defines the new number as the value of x in the players variable.
        player.y = canvas.height / 2; Takes the hight of the canvas (512), divids it by two and defines the number as the value of y in the players variable.
-       enemy.x = iconsize / 2 + Math.random() * (canvas.width - iconsize);
-       enemy.y = iconsize / 2 + Math.random() * (canvas.height - iconsize);-
-      ***************************************************************/
+       enemy.x = iconsize / 2 + Math.random() * (canvas.width - iconsize); This line set the value of the enemy.x to ,iconsize devided by two, 
+       plus a random number bettween 0 and canvas.width-iconsize.
+       enemy.y = iconsize / 2 + Math.random() * (canvas.height - iconsize);This line set the value of the enemy.y to ,iconsize devided by two, 
+       plus a random number bettween 0 and canvas.height-iconsize.-
+       ***************************************************************/
 
       //Sjekk om spilleren har trykket ned (og holder) en tast:
       document.addEventListener("keydown", buttonPressed);
@@ -115,11 +123,11 @@
       let up = false;
       let down = false;
 
-      /*Task 1.
-      Error 1. The system can not identify the beggining of the function block, due to the lack of curly brackets. To fix this error we need to define where the block beggins,
-      by addidng {, so the system knows where it should start executing code.
-      Error 2. The system can not run the contents in the function block properly, due to an unidentified punctuation mark in line (..),
-      simply fix the error by removing the full stop mark */
+      /* Task 1.
+        Error 1) The system can not identify the beggining of the function block, due to the lack of curly brackets. To fix this error we need to define where the block beggins,
+        by addidng {, so the system knows where it should start executing code.
+        Error 2) The system can not run the contents in the function block properly, due to an unidentified punctuation mark in line (141),
+        simply fix the error by removing the full stop mark. */
       //Set retningsvariabel til true hvis riktig piltast er trykket:
       function buttonPressed(event) {
         if (event.key === "ArrowLeft") {
@@ -151,18 +159,18 @@
         }
       }
       /**************************************************************
-       OPPGAVE 2 - KOMMENTAR 2
-       Forklar hvorfor vi trenger å sjekke både når en knapp er trykket ned,
-       og når den er sluppet opp igjen.
-       - We need both of the functions (buttonPressed and buttonReleased) to help the system identify change in when a button is pressed and when it gets
-       released. The function buttonPressed allows the system to manipulate the player's character's direction accordigly to which ever button is held dowm.
-       The function buttonReleased allows the character to stop it's previous action when a button is released. Withought the second function, the character would
-       continue moving the same direction, even when no button is held down. -
-      ***************************************************************/
+         OPPGAVE 2 - KOMMENTAR 2
+         Forklar hvorfor vi trenger å sjekke både når en knapp er trykket ned,
+         og når den er sluppet opp igjen.
+         - We need both of the functions (buttonPressed and buttonReleased) to help the system identify change in when a button is pressed and when it gets
+         released. The function buttonPressed allows the system to manipulate the player's character's direction accordigly to which ever button is held dowm.
+         The function buttonReleased allows the character to stop it's previous action when a button is released. Withought the second function, the character would
+         continue moving the same direction, even when no button is held down. -
+         ***************************************************************/
 
       /* Task 1.
-      Error 3. The logical and operator ?? is not appropriate to use for line (..). This opperator is more used to combine two or more statements.
-      Since The line (..) uses other comparison operators, for the statement to work we need to use the ternary operator ? after the condition left*/
+        Error 3) The logical and operator ?? is not appropriate to use for line (177). This opperator is more used to combine two or more statements.
+        Since The line (177) uses other comparison operators, for the statement to work we need to use the ternary operator ? after the condition left*/
       //Funksjon som modifiserer spillerens posisjon på spillbrettet:
       function playerMovement(speedModifier) {
         //Flytt player i riktig retning
@@ -183,6 +191,8 @@
         }
       }
 
+      /* Task 4.
+       5) For the button to reapear when the timmer runs out, we can use the same style.display method, but setting the value back to block.*/
       //Lag funksjon for nedtelling
       function countdownFunction() {
         countdown--;
@@ -192,27 +202,29 @@
           countdown = 0;
           playerLoaded = false;
           enemyLoaded = false;
+          startButton.style.display = "block";
         }
       }
       /**************************************************************
-       OPPGAVE 2 - KOMMENTAR 3
-       Forklar hva linjene i funksjonen countDownFunction() gjør
-       - countdown--; when a decrement operator is added after a variable it subracts 1 from the variables value, this allows our counter to count down from 10 (60 when task 3 is done)
+         OPPGAVE 2 - KOMMENTAR 3
+         Forklar hva linjene i funksjonen countDownFunction() gjør
+         - countdown--; when a decrement operator is added after a variable, it subracts 1 from the variables value, this allows our counter 
+         to count down from 10 (60 when task 3 is done).
         if (countdown <= 0) { this line specifies the condition that should be met for the system to execute the block of code under it.
-         When the countdown is equal or bellow zero it should execute the following:
+          When the countdown is equal or bellow zero it should execute the following:
           clearInterval(countdownFunction); stops the coundown function
           gameOver = true; allows game over to apear on the screen
           countdown = 0; displayes the countdown's value as 0 (meaning it no longer is counting down)
           playerLoaded = false; enemyLoaded = false; hides the player's and enemy's characters-
-      ***************************************************************/
+          ***************************************************************/
 
       //Kjør funksjonen for nedtelling hver sekund (1000. milisekund)
       setInterval(countdownFunction, 1000);
 
       /* Task 3.
-      1. To center the text "GAME OVER!" we can devide the canvas width in half and subract half of the text width, by doing so we allow the text to start at a point that
-      is half of the text width from the canvas x center point. This allows the text to fully exted and have simular empty spaces from the game areas edges. To center
-      the hight of the text, we can devide the canvas height by two and use the function textBaseline.*/
+        1) To center the text "GAME OVER!" we can devide the canvas width in half and subract half of the text width (704/2 -(367.2/2)), 
+        by doing so we allow the text to start at a point, that is half of the text width, from the canvas x center point. To center
+        the hight of the text, we can devide the canvas height by two and use the function textBaseline.*/
       //Funksjon som tegner/fyller ut alle spill-elementene i canvas:
       function drawGameElements() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -221,15 +233,16 @@
         gameOver
           ? ctx.fillText(
               "GAME OVER!",
-              canvas.width / 2 - 168.4,
+              canvas.width / 2 - 183.6,
               canvas.height / 2
             )
           : null;
+        document.getElementById("time").innerHTML = countdown;
         document.getElementById("points").innerHTML = aliensCaught;
       }
 
-      /*Task 1.
-      Error 4. The system can not identify the keyword functio, it must be replaced with an existing keyword such as function*/
+      /* Task 1.
+        Error 4) The system can not identify the keyword functio, it must be replaced with an existing keyword such as function*/
       //Funksjon som kjører spillet
       function renderGame() {
         playerMovement(1);
@@ -244,23 +257,31 @@
         window.msRequestAnimationFrame ||
         window.mozRequestAnimationFrame;
 
-      /* Task 3
-        2. Changed the value of the variable countdow to 60*/
+      /* Task 3.
+        2) Deleted let before the veriable countdown, since the veriable is already declared at the start of the code, we dont need to declare it again, we can simply
+        use the name of the variable and set a new value to it. Task 3 requests the time to count down from 60, so we make the value of coundown = 60
+        Task 4.
+        1) The line playGame() would run the code emediatly as the page loaded. By removing this line the system can not identify when should it start running the code.
+        3) Game over is already declared don't need to declare it the second time. For the onCLick method to work, we need to set the playerLoaded
+        and enemyLoaded veriables to true, so that when the button is pressed the characters load.
+        4) To hide the button we can use style.display = "none". Every time the function playGame runs and the game starts, the startButton element becomes hiden.  */
       //Funksjon for start/restart spill
       function playGame() {
-        document.getElementById("time").innerHTML = countdown;
         //Startverdier
-        let countdown = 60;
-        let gameOver = false;
-        playerLoaded = false;
-        enemyLoaded = false;
+        countdown = 60;
+        gameOver = false;
+        playerLoaded = true;
+        enemyLoaded = true;
         //Tegne spill-elementer ved oppstart
         drawCharacters();
         renderGame();
+        startButton.style.display = "none";
       }
 
+      /* Task 4.
+        3) Made an onclick attribute with a value of the function playGame. When the startButton is pressed the system executes the function playGame().*/
       //Kjør hele spillet med playGame-funksjonen
-      playGame();
+      startButton.onclick = playGame;
     </script>
   </body>
 </html>
